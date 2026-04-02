@@ -620,9 +620,14 @@ class GeoWTFS {
         if(!this._isInitial){
             let j = this.viewer.entities.values.length;
             while (j--){
-                const entity = this.viewer.entities.values[j]
-                !entity.name || entity.name !== this._UUID && entity.name !== this._UUIDRoad ||
-                entity.timestamp < this._latelyRefreshStamp && (this.viewer.entities.remove(entity), j--);
+                const entity = this.viewer.entities.values[j];
+                if (!entity) continue;
+                if (entity.name && (entity.name === this._UUID || entity.name === this._UUIDRoad)) {
+                    if (entity.timestamp < this._latelyRefreshStamp) {
+                        this.viewer.entities.remove(entity);
+                        j--;
+                    }
+                }
             }
             if(this.aotuCollide) this.collisionDetection()
         }
@@ -638,7 +643,7 @@ class GeoWTFS {
             const entity = entities[len];
             if(entity.name && (entity.name === this._UUID || entity.name === this._UUIDRoad)){
                 let point, i;
-                point = Cesium.SceneTransforms.wgs84ToDrawingBufferCoordinates(this.viewer.scene, entity.position.getValue(0));
+                point = Cesium.SceneTransforms.worldToDrawingBufferCoordinates(this.viewer.scene, entity.position.getValue(0));
                 entity.show = true;
                 i = this.getLabelReact({point, entity});
                 entity.collisionBox = i;
