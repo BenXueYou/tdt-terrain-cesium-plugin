@@ -638,7 +638,7 @@ class GeoWTFS {
             const entity = entities[len];
             if(entity.name && (entity.name === this._UUID || entity.name === this._UUIDRoad)){
                 let point, i;
-                point = Cesium.SceneTransforms.wgs84ToDrawingBufferCoordinates(this.viewer.scene, entity.position.getValue(0));
+                point = Cesium.SceneTransforms.worldToDrawingBufferCoordinates(this.viewer.scene, entity.position.getValue(0));
                 entity.show = true;
                 i = this.getLabelReact({point, entity});
                 entity.collisionBox = i;
